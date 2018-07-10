@@ -2,9 +2,9 @@
 
 
 # Eclipse
-.classpath
-.settings/
-.gradle/
+#.classpath
+#.settings/
+#.gradle/
 
 # Intellij
 .idea/
