@@ -19,8 +19,9 @@
 }*/
 buildscript {
     ext {
-        springBootVersion = '2.0.3.RELEASE'
+        springBootVersion = '2.0.2.RELEASE'
         pitestVersion = '1.3.0'
+        gradleDockerVersion   = '1.2'
     }
     repositories {
         jcenter()
@@ -29,28 +30,40 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:${pitestVersion}"
+		classpath("se.transmode.gradle:gradle-docker:${gradleDockerVersion}")
     }
 }
 
 
-
+apply plugin: 'docker'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'info.solidsoft.pitest' //testing
 apply plugin: 'pmd' //quality
-
-
+apply plugin: 'war'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 bootJar {
-    baseName = 'Greeting-SpringBoot'
+    baseName = 'greeting-springboot'
     version =  '1.0.0'
 }
 
+
+task buildDocker(type: Docker) {
+  push = false
+  applicationName = bootJar.baseName
+  dockerfile = file('src/main/docker/Dockerfile')
+  doFirst {
+    copy {
+      from war
+      into "build/docker/target"
+    }
+  }
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -110,4 +123,3 @@ dependencies {
     
 
 }
-
