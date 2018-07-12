@@ -4,7 +4,9 @@
 # Eclipse
 #.classpath
 #.settings/
-#.gradle/
+.gradle/4.8
+.gradle/4.8.1
+.gradle/buildOutputCleanup
 
 # Intellij
 .idea/
