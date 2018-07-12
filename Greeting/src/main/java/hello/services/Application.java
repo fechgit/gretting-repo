@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan({"hello.swagger","hello.services"})
+@ComponentScan({"hello.swagger","hello.services,","hello.business", "hello.clients"})
 public class Application {
 
 	public static void main(String[] args) {

@@ -21,21 +21,20 @@ buildscript {
     ext {
         springBootVersion = '2.0.2.RELEASE'
         pitestVersion = '1.3.0'
-        gradleDockerVersion   = '1.2'
     }
     repositories {
-        jcenter()
-        mavenCentral()
+		mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:${pitestVersion}"
-		classpath("se.transmode.gradle:gradle-docker:${gradleDockerVersion}")
+		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
     }
 }
 
 
-apply plugin: 'docker'
+apply plugin: 'com.palantir.docker'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
@@ -47,13 +46,15 @@ apply plugin: 'war'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-bootJar {
+bootWar {
     baseName = 'greeting-springboot'
     version =  '1.0.0'
 }
 
-
-task buildDocker(type: Docker) {
+group = 'spring-boot'
+version = '0.0.1-SNAPSHOT'
+/*task buildDocker(type: Docker) {
+  dependsOn = build
   push = false
   applicationName = bootJar.baseName
   dockerfile = file('src/main/docker/Dockerfile')
@@ -63,12 +64,27 @@ task buildDocker(type: Docker) {
       into "build/docker/target"
     }
   }
+}*/
+
+docker {
+    dependsOn build
+    name "${project.group}/${bootWar.baseName}"
+    files bootWar.archivePath
+    buildArgs(['WAR_FILE': "${bootWar.archiveName}"])
+}
+
+task printWarName << {
+    println bootWar.archiveName
+}
+
+task printWarPath << {
+    println bootWar.archivePath
 }
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    jcenter()
     mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 ext {
