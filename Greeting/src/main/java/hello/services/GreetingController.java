@@ -29,7 +29,8 @@ public class GreetingController {
     
 	//private String url = "http://192.168.40.159:8089/api/random";
 	//private String url = "http://192.168.0.4:8089/api/random";
-	private String url = "http://192.168.42.29:8089/api/random";
+	//private String url = "http://192.168.42.29:8089/api/random";
+	private String url = System.getenv("URL_BACKEND");
 	
 	@Autowired
     private BusinessGreeting business;
